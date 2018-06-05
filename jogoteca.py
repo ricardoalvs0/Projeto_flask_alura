@@ -9,7 +9,7 @@ app.secret_key = 'alura'
 
 app.config['MYSQL_HOST'] = "localhost"
 app.config['MYSQL_USER'] = "root"
-app.config['MYSQL_PASSWORD'] = "admin"
+app.config['MYSQL_PASSWORD'] = "123789"
 app.config['MYSQL_DB'] = "jogoteca"
 app.config['MYSQL_PORT'] = 3306
 
@@ -34,12 +34,27 @@ def novo():
 @app.route('/criar', methods=['POST',])
 def criar():
     nome = request. form['nome']
-    categoria = request. form['categoria']
-    console = request. form['console']
+    categoria = request.form['categoria']
+    console = request.form['console']
     jogo = Jogo(nome, categoria, console)
     jogo_dao.salvar(jogo)
     return redirect(url_for('index'))
 
+@app.route('/editar/<int:id>')
+def editar(id):
+    jogo = jogo_dao.busca_por_id(id)
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        return redirect(url_for('login', proxima=url_for('editar', id=jogo.id)))
+    return render_template('edit.html', jogo=jogo, titulo='Editando Jogo')
+
+@app.route('/atualizar/<int:id>',methods=['POST',])
+def atualizar(id):
+    nome = request. form['nome']
+    categoria = request.form['categoria']
+    console = request.form['console']
+    jogo = Jogo(nome, categoria, console, id)
+    jogo_dao.salvar(jogo)
+    return redirect(url_for('index'))
 
 @app.route('/login')
 def login():
