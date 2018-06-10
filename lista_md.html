@@ -1,0 +1,32 @@
+{% extends "template_md.html" %}
+{% block conteudo %}
+    <table class="table table-striped table-responsive table-bordered">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Console</th>
+                <!--<th></th>-->
+            </tr>
+        </thead>
+        <tbody>
+        {% for jogo in jogos %}
+            <tr>
+                <td>{{ jogo.nome }}</td>
+                <td>{{ jogo.categoria }}</td>
+                <td>{{ jogo.console }}</td>
+                <td><a href="{{url_for('editar', id=jogo.id)}}">Editar</a>
+                    <a href="{{url_for('deletar', id=jogo.id)}}">Deletar</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{url_for('novo')}}"type="submit" class="btn btn-primary btn-novo">Novo Jogo!</a>
+    {% if session['usuario_logado'] == None %}
+        <a href="{{url_for('login')}}" type="submit" class="btn btn-primary btn-log">Login</a>
+        <a href="{{url_for('user')}}" type="submit" class="btn btn-primary btn-new_user">Novo Usuário</a>
+        {% else %}
+            <a href="{{url_for('logout')}}" class="btn btn-danger btn-voltar">Logout</a>
+    {% endif %}
+{% endblock %}
